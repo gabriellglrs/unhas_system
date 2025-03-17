@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Clientes - Studio de Unhas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<!-- Inclusão do cabeçalho -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Conteúdo Principal -->
+<main class="container py-5">
+    <h1 class="mb-4">Gerenciar Clientes</h1>
+
+    <!-- Mensagem de sucesso ou erro -->
+    <div th:if="${mensagem}" class="alert alert-success" th:text="${mensagem}"></div>
+    <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+
+    <!-- Lista de clientes -->
+    <div th:if="${clientes.empty}" class="alert alert-info">
+        Nenhum cliente cadastrado.
+    </div>
+
+    <div th:unless="${clientes.empty}" class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Data de Cadastro</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cliente : ${clientes}">
+                <td th:text="${cliente.id}"></td>
+                <td th:text="${cliente.nome}"></td>
+                <td th:text="${cliente.email}"></td>
+                <td th:text="${cliente.telefone} ?: 'Não informado'"></td>
+                <td th:text="${#temporals.format(cliente.dataCadastro, 'dd/MM/yyyy HH:mm')}"></td>
+                <td>
+                    <!-- Aqui você pode adicionar ações como editar ou excluir -->
+                    <a href="#" class="btn btn-sm btn-outline-primary">Editar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<!-- Inclusão do rodapé -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

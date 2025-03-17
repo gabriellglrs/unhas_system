@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Serviços - Studio de Unhas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<!-- Inclusão do cabeçalho -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Conteúdo Principal -->
+<main class="container py-5">
+    <h1 class="mb-4">Gerenciar Serviços</h1>
+
+    <!-- Mensagem de sucesso ou erro -->
+    <div th:if="${mensagem}" class="alert alert-success" th:text="${mensagem}"></div>
+    <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+
+    <!-- Formulário para criar novo serviço -->
+    <section class="mb-5">
+        <h2>Criar Novo Serviço</h2>
+        <form th:action="@{/admin/servicos/criar}" th:object="${novoServico}" method="post" class="row g-3">
+            <div class="col-md-4">
+                <label for="nome" class="form-label">Nome</label>
+                <input type="text" id="nome" th:field="*{nome}" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <label for="preco" class="form-label">Preço (R$)</label>
+                <input type="number" id="preco" th:field="*{preco}" class="form-control" step="0.01" required>
+            </div>
+            <div class="col-md-4">
+                <label for="duracaoMinutos" class="form-label">Duração (minutos)</label>
+                <input type="number" id="duracaoMinutos" th:field="*{duracaoMinutos}" class="form-control" required>
+            </div>
+            <div class="col-12">
+                <label for="descricao" class="form-label">Descrição</label>
+                <textarea id="descricao" th:field="*{descricao}" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Criar Serviço</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Lista de serviços -->
+    <div th:if="${servicos.empty}" class="alert alert-info">
+        Nenhum serviço cadastrado.
+    </div>
+
+    <div th:unless="${servicos.empty}" class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Preço</th>
+                <th>Duração</th>
+                <th>Ativo</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="servico : ${servicos}">
+                <td th:text="${servico.id}"></td>
+                <td th:text="${servico.nome}"></td>
+                <td th:text="'R$ ' + ${#numbers.formatDecimal(servico.preco, 1, 2)}"></td>
+                <td th:text="${servico.duracaoMinutos} + ' min'"></td>
+                <td th:text="${servico.ativo} ? 'Sim' : 'Não'"></td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                            th:attr="data-bs-target='#editModal' + ${servico.id}">
+                        Editar
+                    </button>
+                    <form th:action="@{/admin/servicos/{id}/desativar(id=${servico.id})}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                th:disabled="${!servico.ativo}"
+                                th:text="${servico.ativo} ? 'Desativar' : 'Desativado'"></button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para edição de serviço -->
+    <div th:each="servico : ${servicos}" class="modal fade" th:id="'editModal' + ${servico.id}" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form th:action="@{/admin/servicos/{id}/atualizar(id=${servico.id})}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar Serviço</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nomeEdit" class="form-label">Nome</label>
+                            <input type="text" id="nomeEdit" name="nome" th:value="${servico.nome}" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="precoEdit" class="form-label">Preço (R$)</label>
+                            <input type="number" id="precoEdit" name="preco" th:value="${servico.preco}" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="duracaoEdit" class="form-label">Duração (minutos)</label>
+                            <input type="number" id="duracaoEdit" name="duracaoMinutos" th:value="${servico.duracaoMinutos}" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descricaoEdit" class="form-label">Descrição</label>
+                            <textarea id="descricaoEdit" name="descricao" class="form-control" rows="3" th:text="${servico.descricao}"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Inclusão do rodapé -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

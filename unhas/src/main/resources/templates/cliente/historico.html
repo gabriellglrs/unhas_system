@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Agendamentos - Studio de Unhas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<!-- Inclusão do cabeçalho -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Conteúdo Principal -->
+<main class="container py-5">
+    <h1 class="mb-4">Histórico de Agendamentos</h1>
+
+    <!-- Mensagem de sucesso ou erro -->
+    <div th:if="${mensagem}" class="alert alert-success" th:text="${mensagem}"></div>
+    <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+
+    <!-- Lista de agendamentos -->
+    <div th:if="${agendamentos.empty}" class="alert alert-info">
+        Você ainda não possui agendamentos.
+    </div>
+
+    <div th:unless="${agendamentos.empty}" class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Serviço</th>
+                <th>Data</th>
+                <th>Horário</th>
+                <th>Status</th>
+                <th>Valor</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="agendamento : ${agendamentos}">
+                <td th:text="${agendamento.id}"></td>
+                <td th:text="${agendamento.servico.nome}"></td>
+                <td th:text="${#temporals.format(agendamento.dataHoraInicio, 'dd/MM/yyyy')}"></td>
+                <td th:text="${#temporals.format(agendamento.dataHoraInicio, 'HH:mm')} + ' - ' + ${#temporals.format(agendamento.dataHoraFim, 'HH:mm')}"></td>
+                <td th:text="${agendamento.status}"></td>
+                <td th:text="'R$ ' + ${#numbers.formatDecimal(agendamento.valorTotal, 1, 2)}"></td>
+                <td>
+                    <form th:action="@{/agendamento/{id}/cancelar(id=${agendamento.id})}" method="post" class="d-inline"
+                          th:if="${agendamento.status == T(com.unhasystem.model.Agendamento$StatusAgendamento).AGENDADO}">
+                        <button type="submit" class="btn btn-sm btn-danger"
+                                onclick="return confirm('Tem certeza que deseja cancelar este agendamento?');">
+                            Cancelar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="/agendamento/novo" class="btn btn-primary">Fazer Novo Agendamento</a>
+    </div>
+</main>
+
+<!-- Inclusão do rodapé -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

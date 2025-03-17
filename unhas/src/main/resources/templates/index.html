@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unha System - Início</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="/">Unha System</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">Início</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/portfolio}">Portfólio</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/agendamento/novo}">Agendar</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<header class="bg-primary text-white text-center py-5">
+    <div class="container">
+        <h1>Bem-vindo ao Unha System</h1>
+        <p>Sua beleza, nosso cuidado! Agende seu horário e confira nossos trabalhos.</p>
+        <a th:href="@{/agendamento/novo}" class="btn btn-light btn-lg">Agendar Agora</a>
+    </div>
+</header>
+
+<!-- Portfolio Preview -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Nossos Trabalhos</h2>
+        <!-- Ajuste aqui para evitar o erro -->
+        <div th:if="${portfolioItems == null or portfolioItems.isEmpty()}" class="text-center my-5">
+            <p>Ainda não há trabalhos cadastrados no portfólio.</p>
+        </div>
+        <div class="row g-4" th:unless="${portfolioItems == null or portfolioItems.isEmpty()}">
+            <div class="col-md-4" th:each="item : ${portfolioItems}">
+                <div class="card h-100">
+                    <img th:src="${item.imagemUrl}" class="card-img-top portfolio-img" th:alt="${item.titulo}" style="object-fit: cover; height: 200px;">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${item.titulo}">Título do Trabalho</h5>
+                        <p class="card-text" th:text="${item.descricao}">Descrição do trabalho realizado.</p>
+                        <a th:href="@{/portfolio/item/{id}(id=${item.id})}" class="btn btn-sm btn-outline-primary">Ver detalhes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="/portfolio" class="btn btn-primary">Ver Portfólio Completo</a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-light text-center py-4">
+    <p>&copy; 2025 Unha System. Todos os direitos reservados.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
