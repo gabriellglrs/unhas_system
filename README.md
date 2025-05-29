@@ -1,4 +1,5 @@
-![LinkedIn cover - 22](https://github.com/user-attachments/assets/9d3bd7c2-fd8b-429a-b799-1adf1dca827d)
+![LinkedIn cover - 26](https://github.com/user-attachments/assets/1ee085f0-fb59-4d07-8d83-a294bc66f00d)
+
 
 # Sistema de Agendamento de Unhas 💅
 
@@ -210,3 +211,11 @@ Para dúvidas ou suporte:
 ---
 
 **Desenvolvido com ❤️ para facilitar o agendamento de serviços de beleza**
+<br>
+<br>
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/ed7208b8-6bdc-4c82-98aa-8c8cb9c1428f" height="150"/>
+</div>
+
+
+<img width=100% src="https://capsule-render.vercel.app/api?type=waving&color=4C89F8&height=120&section=footer"/>
